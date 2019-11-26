@@ -1,0 +1,1 @@
+# shlink-client-core
