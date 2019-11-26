@@ -21,7 +21,5 @@ jobs:
     - name: Pack
       run: dotnet pack ./Src/Shlink.Client.sln --configuration Release -o NuGetPackages
       
-    - name: Install NuGet client
-      uses: warrenbuckley/Setup-Nuget@v1
-      
-
+    - name: Deploy NuGet Package
+      run: dotnet nuget push "./Src/NuGetPackages\Shlink.Client.Core.*.nupkg" -k ${{ secrets.GITHUB_TOKEN } -s "https://nuget.pkg.github.com/from-zero-fr/index.json"
