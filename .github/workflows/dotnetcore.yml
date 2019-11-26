@@ -3,29 +3,23 @@ name: .NET Core
 on: [push]
 
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-
+  nuget-publish:
+    name: Publish package to GPR
+    runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v1
-    
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+    - uses: einaregilsson/build-number@v1
       with:
-        dotnet-version: 3.0.100
-        
-    - name: Build with dotnet
-      run: dotnet build --configuration Release Src
-      
-    - name: Pack
-      run: dotnet pack ./Src/Shlink.Client.sln --configuration Release -o NuGetPackages
-            
-    - name: Install nuget
-      run: sudo apt install -y nuget
-      
-    - name: Authenticating to GitHub Packages
-      run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/from-zero-fr/index.json" -UserName from-zero-fr -Password ${{ secrets.GITHUB_TOKEN }}
-      
-    - name: Deploy NuGet Package
-      run: nuget push "./NuGetPackages/Shlink.Client.Core.*.nupkg" -Source "GPR"
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v1
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.2.402
+    - uses: warrenbuckley/Setup-Nuget@v1
+    - run: dotnet pack ./Src/Shlink.Client.sln --configuration Release /p:Version=1.1.0.$env:BUILD_NUMBER --output $env:GITHUB_WORKSPACE
+      env:
+        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+        DOTNET_CLI_TELEMETRY_OPTOUT: 1
+    - run: nuget sources Add -Name "GPR" -Source https://nuget.pkg.github.com/from-zero-fr/index.json -UserName from-zero-fr -Password ${{ secrets.GITHUB_TOKEN }}
+    - run: nuget push $env:GITHUB_WORKSPACE\*.nupkg -Source "GPR"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
