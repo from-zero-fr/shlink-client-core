@@ -22,10 +22,10 @@ jobs:
       run: dotnet pack ./Src/Shlink.Client.sln --configuration Release -o NuGetPackages
       
     - name: Add Github source
-      run : nuget source Add -Name "GitHub" -Source "https://nuget.pkg.github.com/from-zero-fr/index.json"
+      run : dotnet nuget source Add -Name "GitHub" -Source "https://nuget.pkg.github.com/from-zero-fr/index.json"
       
     - name: Set Github api key
-      run: nuget setApiKey ${{ secrets.GH_TOKEN }} -Source "https://nuget.pkg.github.com/MY_ACCOUNT/index.json"
+      run: dotnet nuget setApiKey ${{ secrets.GH_TOKEN }} -Source "https://nuget.pkg.github.com/MY_ACCOUNT/index.json"
       
     - name: Deploy NuGet Package
       run: dotnet nuget push "./NuGetPackages/Shlink.Client.Core.*.nupkg" -Source "GitHub"
