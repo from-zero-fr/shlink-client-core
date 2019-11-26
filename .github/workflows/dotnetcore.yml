@@ -21,5 +21,11 @@ jobs:
     - name: Pack
       run: dotnet pack ./Src/Shlink.Client.sln --configuration Release -o NuGetPackages
             
+    - name: Install nuget
+      run: apt install -y nuget
+      
+    - name: Authenticating to GitHub Packages
+      run: nuget sources Add -Name "GPR" -Source "https://nuget.pkg.github.com/from-zero-fr/index.json" -UserName from-zero-fr -Password ${{ secrets.GITHUB_TOKEN }}
+      
     - name: Deploy NuGet Package
-      run: dotnet nuget push "./NuGetPackages/Shlink.Client.Core.*.nupkg" --source "https://nuget.pkg.github.com/from-zero-fr/index.json" --api-key ${{ secrets.GITHUB_TOKEN }}
+      run: nuget push "./NuGetPackages/Shlink.Client.Core.*.nupkg" -Source "GPR"
