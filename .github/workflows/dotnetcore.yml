@@ -21,6 +21,9 @@ jobs:
     - name: Pack
       run: dotnet pack ./Src/Shlink.Client.sln --configuration Release -o NuGetPackages
       
+    - name: RenamePackage
+      run : mv ./NuGetPackages/Shlink.Client.Core.1.0.0.nupkg  ./NuGetPackages/shlink-client-core.nupkg
+      
     - name: Publish nuget to GitHub Packages
       run: |
            for f in ./NuGetPackages/*.nupkg
