@@ -21,12 +21,6 @@ jobs:
     - name: Pack
       run: dotnet pack ./Src/Shlink.Client.sln --configuration Release -o NuGetPackages
       
-    - name: Setup nuget config
-      run: sed 's/GITHUB_TOKEN/${{ secrets.GITHUB_TOKEN }}/g' .nuget.config > nuget.config
-      
-    - name: Deploy NuGet Package
-      run: dotnet nuget push "./NuGetPackages/Shlink.Client.Core.*.nupkg" -s "github"
-      
     - name: Publish nuget to GitHub Packages
       run: |
            for f in ./NuGetPackages*.nupkg
