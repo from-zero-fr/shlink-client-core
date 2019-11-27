@@ -25,6 +25,6 @@ jobs:
       run: |
            for f in ./NuGetPackages/*.nupkg
            do
-             curl -vX PUT -u "from-zero-fr:${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/from-zero-fr/
+             curl -vX PUT -u "from-zero-fr:${{ secrets.GITHUB_TOKEN }}" -F package=@$f https://nuget.pkg.github.com/from-zero-fr/shlink-client-core/
            done
       shell: bash
